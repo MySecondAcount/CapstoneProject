@@ -18,13 +18,14 @@ services:
     restart: always
     container_name: worker3
     ports:
-      - "8083:8081" 
+      - "8083:8081"  
   bootstrap:
     build: ./Bootstrap
     restart: always
-    container_name: bootstrap
+    container_name: bootstrap 
     ports:
-      - "8080:8080"  
-    depends_on:
-      - serviceName: worker1
-  
+      - "8080:8080"   
+    depends_on: 
+    - worker1
+    - worker2
+    - worker3   
