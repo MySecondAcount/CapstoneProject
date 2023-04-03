@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 @Service
 public class TokensExpirationManager {
@@ -17,6 +18,7 @@ public class TokensExpirationManager {
     private static TokensExpirationManager instance;
     private final Long expirationTime = 3600000L;
     private File tokensFile;
+    private Logger logger = Logger.getLogger(TokensExpirationManager.class.getName());
 
     private TokensExpirationManager() {
         tokensFile = new File(tokensFilePath);
@@ -54,8 +56,10 @@ public class TokensExpirationManager {
         }
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 120000)
     public void removeExpiredTokens() {
+        logger.info("Checking for expired tokens - new cycle -");
+
         String content = readFileAsString(tokensFile);
         JSONArray jsonArray = new JSONArray(content);
 

@@ -131,11 +131,13 @@ public class DocumentController {
             for (String worker : affinityManager.getWorkers()) {
                 {
                     String url = "http://" + worker + ":8081/api/isAffinity";
-                    HttpEntity<String> requestEntity = new HttpEntity<>("", null);
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("X-Username", "bootstrappingNode");
+                    headers.set("X-Token", "@321bootstrappingNode123@");
+                    HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                     ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Boolean.class);
                     if (responseEntity.getBody()) {
                         String affinityUrl = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
-                        HttpHeaders headers = new HttpHeaders();
                         headers.set("X-Username", username);
                         headers.set("X-Token", token);
                         HttpEntity<String> affinityRequestEntity = new HttpEntity<>(json, headers);
@@ -163,7 +165,10 @@ public class DocumentController {
         logger.info("Passing the affinity from " + currentWorkerName + " to the next worker: " + nextWorkerName);
 
         String url = "http://" + nextWorkerName + ":8081/api/setAffinity";
-        HttpEntity<String> requestEntity = new HttpEntity<>("", null);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", "bootstrappingNode");
+        headers.set("X-Token", "@321bootstrappingNode123@");
+        HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
         restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);
     }
 

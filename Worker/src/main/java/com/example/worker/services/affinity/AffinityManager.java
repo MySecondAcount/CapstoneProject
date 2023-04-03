@@ -4,6 +4,7 @@ import com.example.worker.caching.LRUCache;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,6 +52,9 @@ public class AffinityManager {
     public void propagateAddingAffinity(String docId, String docManagerName) {
         for (String worker : workers) {
             String url = "http://" + worker + ":8081/api/addAffinityData/" + docId + "/" + docManagerName;
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Username", "bootstrappingNode");
+            headers.set("X-Token", "@321bootstrappingNode123@");
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> requestEntity = new HttpEntity<>("", null);
             restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);

@@ -18,7 +18,6 @@ public class NetworkManager {
     private Logger logger = Logger.getLogger(NetworkManager.class.getName());
 
 
-
     private NetworkManager() {
         this.restTemplate = new RestTemplate();
         this.headers = new HttpHeaders();
@@ -52,6 +51,9 @@ public class NetworkManager {
 
     public void setFirstWorkerAsAffinity() {
         logger.info("Setting worker1 as affinity");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", "bootstrappingNode");
+        headers.set("X-Token", "@321bootstrappingNode123@");
         String url = "http://worker1:8081/api/setAffinity";
         HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
         restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponse.class);
