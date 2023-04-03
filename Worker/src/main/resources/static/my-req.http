@@ -41,7 +41,7 @@ content-type: application/json
 
 ###
 # checking if 8081 is affinity (fine)
-GET http://35.184.131.198:8082/api/isAffinity
+GET http://35.184.131.198:8083/api/isAffinity
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
@@ -205,3 +205,5 @@ content-type: application/json
 GET http://35.184.131.198:8081/api/isAffinity
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
+
+

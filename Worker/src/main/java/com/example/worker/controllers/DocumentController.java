@@ -66,7 +66,7 @@ public class DocumentController {
             @PathVariable("db_name") String dbName,
             @PathVariable("collection_name") String collectionName,
             @RequestBody String json,
-            @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagatedRequest,
+            @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean propagatedRequest,
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token
     ) {
@@ -84,7 +84,7 @@ public class DocumentController {
         File collectionFile = new File(DATABASES_DIRECTORY + dbName + "/" + collectionName + ".json");
         File schemaFile = new File(DATABASES_DIRECTORY + dbName + SCHEMAS_DIRECTORY + collectionName + ".json");
 
-        if (propagatedRequest) { // Just take the new copy of the data. (no need to propagate it again)
+        if (propagatedRequest) { // - Just take the new copy of the data. (no need to propagate it again)
             dao.addDocument(collectionFile, json);
             propertyIndexManager.indexingNewObject(dbName, collectionName, new JSONObject(json));
             logger.info("Document inserted successfully");
@@ -110,7 +110,7 @@ public class DocumentController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
@@ -249,7 +249,7 @@ public class DocumentController {
             @PathVariable("db_name") String dbName,
             @PathVariable("collection_name") String collectionName,
             @PathVariable("doc_id") String docId,
-            @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagatedRequest,
+            @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean propagatedRequest,
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token) {
         logger.info("Deleting document with ID " + docId + " from collection " + collectionName +
@@ -298,7 +298,7 @@ public class DocumentController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/deleteDoc/" + dbName + "/" + collectionName + "/" + docId;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
@@ -330,7 +330,7 @@ public class DocumentController {
             @PathVariable("doc_id") String docId,
             @PathVariable("property_name") String propertyName,
             @PathVariable("new_value") Object newValue,
-            @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagatedRequest,
+            @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean propagatedRequest,
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token,
             @RequestHeader(value = "X-Old-Value", required = false) String oldValue
@@ -430,7 +430,7 @@ public class DocumentController {
                 String url = "http://" + worker + ":8081/api/updateDoc/" + dbName + "/" +
                         collectionName + "/" + docId + "/" + propertyName + "/" + newValue;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);

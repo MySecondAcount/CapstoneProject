@@ -31,7 +31,7 @@ public class DatabaseController {
 
     @GetMapping("/createDB/{name}")
     public ApiResponse createDatabase(@PathVariable("name") String name,
-                                      @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagatedRequest,
+                                      @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean propagatedRequest,
                                       @RequestHeader(value = "X-Username") String username,
                                       @RequestHeader(value = "X-Token") String token) {
 
@@ -55,7 +55,7 @@ public class DatabaseController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/createDB/" + name;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
@@ -79,7 +79,7 @@ public class DatabaseController {
 
     @DeleteMapping("deleteDB/{name}")
     public ApiResponse deleteDatabase(@PathVariable("name") String name
-            , @RequestHeader(value = "X-PropagateRequest", defaultValue = "false") boolean propagatedRequest,
+            , @RequestHeader(value = "X-PropagatedRequest", defaultValue = "false") boolean propagatedRequest,
                                       @RequestHeader(value = "X-Username") String username,
                                       @RequestHeader(value = "X-Token") String token) {
 
@@ -109,7 +109,7 @@ public class DatabaseController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/deleteDB/" + name;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);

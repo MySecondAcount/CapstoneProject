@@ -36,12 +36,12 @@ public class CollectionController {
             @PathVariable("db_name") String dbName,
             @PathVariable("collection_name") String collectionName,
             @RequestBody Schema schema,
-            @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagateRequest,
+            @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean PropagatedRequest,
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token
     ) {
         logger.info("Received request to create collection " + collectionName + " in database " + dbName
-                + (propagateRequest ? " (propagated)" : "") + " from user " + username);
+                + (PropagatedRequest ? " (propagated)" : "") + " from user " + username);
 
         dbName = dbName.toLowerCase();
         collectionName = collectionName.toLowerCase();
@@ -55,7 +55,7 @@ public class CollectionController {
         File collectionFile = new File(DATABASES_DIRECTORY + dbName + "/" + collectionName + ".json");
         ApiResponse response = new ApiResponse("", 200);
 
-        if (propagateRequest) {
+        if (PropagatedRequest) {
             logger.info("the request was propagated.");
             if (collectionFile.exists()) {
                 logger.warn("Collection already exists.");
@@ -73,7 +73,7 @@ public class CollectionController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/createCol/" + dbName + "/" + collectionName;
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<Schema> requestEntity = new HttpEntity<>(schema, headers);
@@ -92,12 +92,12 @@ public class CollectionController {
     public ApiResponse deleteCollection(
             @PathVariable("db_name") String dbName,
             @PathVariable("collection_name") String collectionName,
-            @RequestHeader(value = "X-Propagate-Request", defaultValue = "false") boolean propagateRequest,
+            @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean PropagatedRequest,
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token
     ) {
         logger.info("Received request to delete collection '{}.{}'"
-                + (propagateRequest ? " (propagated)" : ""), dbName, collectionName);
+                + (PropagatedRequest ? " (propagated)" : ""), dbName, collectionName);
 
         dbName = dbName.toLowerCase();
         collectionName = collectionName.toLowerCase();
@@ -116,7 +116,7 @@ public class CollectionController {
             return response;
         }
 
-        if (propagateRequest) {
+        if (PropagatedRequest) {
             // clearing the cache and the indexing
             try {
                 dao.clearCollectionCaching(collectionFile);
@@ -142,7 +142,7 @@ public class CollectionController {
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":/api/deleteCol/" + dbName.toLowerCase() + "/" + collectionName.toLowerCase();
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("X-Propagate-Request", "true");
+                headers.set("X-Propagated-Request", "true");
                 headers.set("X-Username", username);
                 headers.set("X-Token", token);
                 HttpEntity<String> requestEntity = new HttpEntity<>(headers);
@@ -170,7 +170,6 @@ public class CollectionController {
             return new ApiResponse("User is not authorized.", 401);
         }
 
-        // to check if the db exists
         File dbDirectory = new File(DATABASES_DIRECTORY + dbName);
         if (!dbDirectory.exists() && !dbDirectory.isDirectory()) {
             logger.error("Database does not exist. dbName={}", dbName);
