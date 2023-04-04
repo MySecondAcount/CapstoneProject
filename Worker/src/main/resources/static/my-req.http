@@ -110,7 +110,7 @@ X-Token: @321bootstrappingNode123@
 
 ###
 # getting the databases(fine)
-GET http://35.184.131.198:8082/api/listDB
+GET http://35.184.131.198:8083/api/listDB
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 

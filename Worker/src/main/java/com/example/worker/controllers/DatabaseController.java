@@ -132,6 +132,7 @@ public class DatabaseController {
         }
 
         File dbDirectory = new File(DATABASES_DIRECTORY);
+        
         return new ApiResponse(dao.listDbs(dbDirectory), 200);
     }
 }
