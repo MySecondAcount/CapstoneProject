@@ -35,6 +35,15 @@ public class CommunicationController {
         return new ApiResponse("Affinity data added successfully!", 200);
     }
 
+    @GetMapping("/isAdmin/{username}/{token}")
+    public boolean isAdmin(@PathVariable String username, @PathVariable String token) {
+        return authenticationService.isAdmin(username, token);
+    }
+    
+    @GetMapping("/isUser/{username}/{token}")
+    public boolean isUser(@PathVariable String username, @PathVariable String token) {
+        return authenticationService.isAuthenticatedUser(username, token);
+    }
 
     @GetMapping("/addAuthenticatedUser/{username}/{token}")
     public ApiResponse addAuthenticatedUser(@PathVariable("username") String username, @PathVariable("token") String token,

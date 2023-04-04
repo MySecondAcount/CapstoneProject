@@ -79,7 +79,7 @@ public class DatabaseController {
 
     @DeleteMapping("deleteDB/{name}")
     public ApiResponse deleteDatabase(@PathVariable("name") String name
-            , @RequestHeader(value = "X-PropagatedRequest", defaultValue = "false") boolean propagatedRequest,
+            , @RequestHeader(value = "X-Propagated-Request", defaultValue = "false") boolean propagatedRequest,
                                       @RequestHeader(value = "X-Username") String username,
                                       @RequestHeader(value = "X-Token") String token) {
 

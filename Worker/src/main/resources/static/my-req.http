@@ -1,11 +1,11 @@
 #creating a new database(fine)
-GET http://35.184.131.198:8081/api/createDB/Hello2
+GET http://35.184.131.198:8081/api/createDB/bank
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
 # inserting a new collection with schema(fine)
-POST http://35.184.131.198:8081/api/createCol/Hello2/first
+POST http://35.184.131.198:8081/api/createCol/bank/customer
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 content-type: application/json
@@ -16,16 +16,54 @@ content-type: application/json
     "name": {
       "type": "string"
     },
-    "age": {
-      "type": "number"
+    "dob": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "accountBalance": {
+      "type": "float"
     }
   },
   "required": [
     "name",
-    "age"
+    "dob",
+    "phone",
+    "address",
+    "accountBalance"
   ],
   "additionalProperties": false
 }
+
+
+###
+# inserting a new collection with schema(fine)
+POST http://35.184.131.198:8081/api/createCol/bank/customer
+X-Username: bootstrappingNode
+X-Token: @321bootstrappingNode123@
+content-type: application/json
+
+{
+  "type": "object",
+  "properties": {
+    "customerID": {
+      "type": "string"
+    },
+    "transactionAmount": {
+      "type": "float"
+    }
+  },
+  "required": [
+    "customerID",
+    "transactionAmount"
+  ],
+  "additionalProperties": false
+}
+
 
 ###
 #inserting a document(fine)
@@ -59,7 +97,7 @@ X-Token: @321bootstrappingNode123@
 
 ###
 # deleting the database
-DELETE http://35.184.131.198:8081/api/deleteDB/Hello
+DELETE http://35.184.131.198:8081/api/deleteDB/bankingsystem
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
@@ -78,13 +116,13 @@ X-Token: @321bootstrappingNode123@
 
 ###
 # getting the collections in a database(fine)
-GET http://35.184.131.198:8083/api/getCollections/hello2
+GET http://35.184.131.198:8081/api/getCollections/bankingsystem
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
 # getting all the documents in a collection(fine)
-GET http://35.184.131.198:8081/api/getAllDocs/Hello2/first
+GET http://35.184.131.198:8083/api/getAllDocs/bankingsystem/customers
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 

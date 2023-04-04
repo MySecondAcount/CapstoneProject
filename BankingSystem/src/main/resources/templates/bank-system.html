@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Bank system</title>
+    <meta charset="UTF-8">
+    <title>Bank system</title>
 </head>
 <body>
 <h1> This is the bank system </h1>
+
+<h1> the current username <span th:text="${username}"></span></h1>
+<h1> the current token <span th:text="${token}"></span></h1>
+<h1> the current worker port <span th:text="${workerPort}"></span></h1>
+
+<br>
+
+<form action="CreateNewAccount" method="GET">
+    <input name="Create Account" type="submit" value="Create Account"/>
+</form>
+
+<form action="" method="GET">
+    <input name="Add Customer" type="submit" value="Add Customer"/>
+</form>
+
+<form action="" method="GET">
+    <input name="Add Customer" type="submit" value="Add Customer"/>
+</form>
+
+<form action="" method="GET">
+    <input name="Add Customer" type="submit" value="Add Customer"/>
+</form>
+
+<form action="" method="GET">
+    <input name="Add Customer" type="submit" value="Add Customer"/>
+</form>
+
+<form action="" method="GET">
+    <input name="Add Customer" type="submit" value="Add Customer"/>
+</form>
+
+
+<a th:href="@{/}">Home Page</a>
 
 </body>
 </html>

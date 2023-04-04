@@ -21,11 +21,13 @@ public class Controller {
         logger.info("Received request to register user " + username);
 
         String token = UUID.randomUUID().toString();
+
         String workerName = loadBalancer.getNextWorkerName();
         loadBalancer.passToNextWorker();
-        networkManager.sendUserInfo(username, token, workerName);
-        JSONObject userCredentialsJSON = new JSONObject();
 
+        networkManager.sendUserInfo(username, token, workerName);
+
+        JSONObject userCredentialsJSON = new JSONObject();
         int port = loadBalancer.getWorkerPort(workerName);
         userCredentialsJSON.put("username", username);
         userCredentialsJSON.put("token", token);
@@ -33,7 +35,6 @@ public class Controller {
 
         logger.info("The new user credentials have been sent to the TokenExpirationManager");
         TokensExpirationManager.getInstance().addNewToken(username, token, workerName);
-
 
         logger.info("User " + username + " registered with token " + token);
         return userCredentialsJSON.toString();

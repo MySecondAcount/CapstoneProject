@@ -13,7 +13,9 @@ public class BankingSystemApplication {
 //        String dbIP = scanner.nextLine();
 //        NetworkManager.getInstance().setDatabaseIP(dbIP);
 //
+
         SpringApplication.run(BankingSystemApplication.class, args);
+        NetworkManager.getInstance().buildDatabaseSchema();
     }
 
 }
