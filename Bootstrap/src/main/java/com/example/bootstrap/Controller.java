@@ -17,7 +17,7 @@ public class Controller {
     private Logger logger = Logger.getLogger(Controller.class.getName());
 
     @GetMapping("/register/{username}")
-    public JSONObject register(@PathVariable("username") String username) {
+    public String register(@PathVariable("username") String username) {
         logger.info("Received request to register user " + username);
 
         String token = UUID.randomUUID().toString();
@@ -36,6 +36,6 @@ public class Controller {
 
 
         logger.info("User " + username + " registered with token " + token);
-        return userCredentialsJSON;
+        return userCredentialsJSON.toString();
     }
 }

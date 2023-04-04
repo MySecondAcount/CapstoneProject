@@ -29,7 +29,7 @@ public class NetworkManager {
     }
 
     public JSONObject getUserCredentials(String username) {
-        String url = "http://" + databaseIP + ":8081/register/" + username;
+        String url = "http://" + databaseIP + ":8080/api/register/" + username;
         return restTemplate.getForObject(url, JSONObject.class);
     }
 
