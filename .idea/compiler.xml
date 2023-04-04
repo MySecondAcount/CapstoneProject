@@ -8,15 +8,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Worker" />
         <module name="Bootstrap" />
+        <module name="BankingSystem" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="BankingSystem" target="17" />
       <module name="Bootstrap" target="17" />
       <module name="Worker" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BankingSystem" options="-parameters" />
       <module name="Bootstrap" options="-parameters" />
       <module name="Worker" options="-parameters" />
     </option>

@@ -3,12 +3,14 @@ package com.example.bootstrap;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
+@RequestMapping("/api")
 public class Controller {
     private LoadBalancer loadBalancer = LoadBalancer.getInstance();
     private NetworkManager networkManager = NetworkManager.getInstance();

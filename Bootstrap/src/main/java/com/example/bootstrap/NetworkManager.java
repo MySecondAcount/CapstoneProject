@@ -63,7 +63,7 @@ public class NetworkManager {
         logger.info("Sending user info to " + workerName + "user name: " + username + " token: " + token);
         String url = "http://" + workerName + ":8081/api/addAuthenticatedUser/" + username + "/" + token;
         HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
-        restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         logger.info("User info sent to " + workerName + "user name: " + username + " token: " + token);
     }
 }
