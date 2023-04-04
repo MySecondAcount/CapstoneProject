@@ -1,11 +1,11 @@
 #creating a new database(fine)
-GET http://35.184.131.198:8081/api/createDB/bank
+GET http://35.184.131.198:8081/api/createDB/hello
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
 # inserting a new collection with schema(fine)
-POST http://35.184.131.198:8081/api/createCol/bank/customer
+POST http://35.184.131.198:8081/api/createCol/hello/customer11
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 content-type: application/json
@@ -16,9 +16,6 @@ content-type: application/json
     "name": {
       "type": "string"
     },
-    "dob": {
-      "type": "string"
-    },
     "phone": {
       "type": "string"
     },
@@ -26,12 +23,11 @@ content-type: application/json
       "type": "string"
     },
     "accountBalance": {
-      "type": "float"
+      "type": "number"
     }
   },
   "required": [
     "name",
-    "dob",
     "phone",
     "address",
     "accountBalance"
@@ -41,40 +37,17 @@ content-type: application/json
 
 
 ###
-# inserting a new collection with schema(fine)
-POST http://35.184.131.198:8081/api/createCol/bank/customer
-X-Username: bootstrappingNode
-X-Token: @321bootstrappingNode123@
-content-type: application/json
-
-{
-  "type": "object",
-  "properties": {
-    "customerID": {
-      "type": "string"
-    },
-    "transactionAmount": {
-      "type": "float"
-    }
-  },
-  "required": [
-    "customerID",
-    "transactionAmount"
-  ],
-  "additionalProperties": false
-}
-
-
-###
 #inserting a document(fine)
-POST http://35.184.131.198:8081/api/insertOne/hello2/first
+POST http://35.184.131.198:8081/api/insertOne/hello/customer11
 X-Token: @321bootstrappingNode123@
 X-Username: bootstrappingNode
 content-type: application/json
 
 {
-  "name": "FromIntellij",
-  "age": 22
+  "name": "yazan",
+  "phone": "0792",
+  "address": "Abo Al Ola",
+  "accountBalance": 15.1
 }
 
 ###

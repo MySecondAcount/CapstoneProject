@@ -52,17 +52,13 @@ public class NetworkManager {
     }
 
     public boolean isAuthorizedUser(String username, String token) {
-        // TODO: update this
-//        String url = "http://" + databaseIP + ":" + getWorkerPort(token) + "/api/isUser/" + username + "/" + token;
-//        return restTemplate.getForObject(url, Boolean.class);
-        return true;
+        String url = "http://" + databaseIP + ":" + getWorkerPort(token) + "/api/isUser/" + username + "/" + token;
+        return restTemplate.getForObject(url, Boolean.class);
     }
 
     public boolean isAuthorizedAdmin(String username, String token) {
-        // TODO: update this
-//        String url = "http://" + databaseIP + ":" + 8081 + "/api/isAdmin/" + username + "/" + token;
-//        return restTemplate.getForObject(url, Boolean.class);
-        return true;
+        String url = "http://" + databaseIP + ":" + 8081 + "/api/isAdmin/" + username + "/" + token;
+        return restTemplate.getForObject(url, Boolean.class);
     }
 
     public void buildDatabaseSchema() {
@@ -91,7 +87,7 @@ public class NetworkManager {
                 "            \"type\": \"string\"\n" +
                 "        },\n" +
                 "        \"accountBalance\": {\n" +
-                "            \"type\": \"float\"\n" +
+                "            \"type\": \"number\"\n" +
                 "        }\n" +
                 "    },\n" +
                 "    \"required\": [\n" +
@@ -115,7 +111,7 @@ public class NetworkManager {
                 "            \"type\": \"string\"\n" +
                 "        },\n" +
                 "        \"transactionAmount\": {\n" +
-                "            \"type\": \"float\"\n" +
+                "            \"type\": \"number\"\n" +
                 "        }\n" +
                 "    },\n" +
                 "    \"required\": [\n" +
@@ -141,7 +137,7 @@ public class NetworkManager {
         logger.info("token: " + token);
         logger.info("username: " + username);
 
-        
+
         String url = "http://" + databaseIP + ":" + workerPort + "/api/insertOne/bankingSystem/customers";
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Username", username);

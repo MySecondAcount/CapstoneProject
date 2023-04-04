@@ -56,7 +56,7 @@ public class AffinityManager {
             headers.set("X-Username", "bootstrappingNode");
             headers.set("X-Token", "@321bootstrappingNode123@");
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<String> requestEntity = new HttpEntity<>("", null);
+            HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
             restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);
         }
     }

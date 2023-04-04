@@ -113,7 +113,7 @@ public class BankingSystemController {
 
     @PostMapping("storeNewAccountData")
     public String storeNewAccountData(@RequestParam String customerName, @RequestParam String customerPhone,
-                                      @RequestParam String customerAddress, @RequestParam float accountBalance, Model model, HttpSession httpSession) {
+                                      @RequestParam String customerAddress, @RequestParam double accountBalance, Model model, HttpSession httpSession) {
         logger.info("Received request to store new account data");
         logger.info("Customer name: " + customerName);
         logger.info("Phone: " + customerPhone);
@@ -125,6 +125,7 @@ public class BankingSystemController {
         customer.put("phone", customerPhone);
         customer.put("address", customerAddress);
         customer.put("accountBalance", accountBalance);
+        logger.info("Customer data JSON: " + customer.toString());
 
         networkManager.addNewCustomer(customer, httpSession);
         return "bank-system";
