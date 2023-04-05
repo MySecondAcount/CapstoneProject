@@ -37,7 +37,7 @@ content-type: application/json
 
 ###
 #inserting a document(fine)
-POST http://35.184.131.198:8082/api/insertOne/bankingsystem/customers
+POST http://35.184.131.198:8081/api/insertOne/bankingsystem/customers
 X-Username: a
 X-Token: 9ed76553-4ae8-45c0-8a50-fed9f792f425
 content-type: application/json

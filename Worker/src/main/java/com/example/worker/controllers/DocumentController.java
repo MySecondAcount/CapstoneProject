@@ -107,16 +107,19 @@ public class DocumentController {
             return new ApiResponse("Invalid JSON object.", 400);
         }
 
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+        headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
+
+
         // the current worker is the affinity worker
         if (affinityManager.isCurrentWorkerAffinity()) {
             json = addIdToDocument(json);
             // propagating the new document to all workers
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
-                HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
-                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
                 restTemplate.postForObject(url, requestEntity, ApiResponse.class);
             }
@@ -136,19 +139,12 @@ public class DocumentController {
             for (String worker : affinityManager.getWorkers()) {
                 {
                     String url = "http://" + worker + ":8081/api/isAffinity";
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.set("X-Username", "bootstrappingNode");
-                    headers.set("X-Token", "@321bootstrappingNode123@");
                     HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                     ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Boolean.class);
-
                     if (responseEntity.getBody()) {
                         logger.info("The current worker: " + affinityManager.getCurrentWorkerName() + " is not the " +
                                 "affinity, The affinity worker is: {}", worker);
-
                         String affinityUrl = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
-                        headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
-                        headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                         HttpEntity<String> affinityRequestEntity = new HttpEntity<>(json, headers);
                         restTemplate.postForObject(affinityUrl, affinityRequestEntity, ApiResponse.class);
                         break;
