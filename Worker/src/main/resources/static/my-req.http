@@ -37,29 +37,29 @@ content-type: application/json
 
 ###
 #inserting a document(fine)
-POST http://35.184.131.198:8081/api/insertOne/bankingsystem/customers
+POST http://35.184.131.198:8082/api/insertOne/bankingsystem/customers
 X-Username: a
-X-Token: a4791dd7-908c-40eb-9a7a-1ad6054c7842
+X-Token: 9ed76553-4ae8-45c0-8a50-fed9f792f425
 content-type: application/json
 
 {
   "name": "FromIntellij",
   "phone": "123456789",
   "address": "1234",
-  "accountBalance": 1000
+  "accountBalance": 22
 }
 
 ###
 # getting all the documents in a collection (fine)
-GET http://35.184.131.198:8081/api/getAllDocs/bankingsystem/customers
+GET http://35.184.131.198:8083/api/getAllDocs/bankingsystem/customers
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
 #inserting a document(fine)
 POST http://35.184.131.198:8082/api/insertOne/bankingsystem/transactions
-X-Token: @321bootstrappingNode123@
 X-Username: bootstrappingNode
+X-Token: @321bootstrappingNode123@
 content-type: application/json
 
 {

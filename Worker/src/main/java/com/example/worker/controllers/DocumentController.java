@@ -73,7 +73,7 @@ public class DocumentController {
             @RequestHeader(value = "X-Token") String token
     ) {
         logger.info("trying to add the document" + json);
-        
+
         dbName = dbName.toLowerCase();
         collectionName = collectionName.toLowerCase();
         logger.info("Inserting document into database: {}, collection: {}" + (propagatedRequest ? " (propagated)" : ""), dbName, collectionName);
@@ -147,13 +147,12 @@ public class DocumentController {
                                 "affinity, The affinity worker is: {}", worker);
 
                         String affinityUrl = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
-                        headers.set("X-Username", username);
-                        headers.set("X-Token", token);
+                        headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                        headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                         HttpEntity<String> affinityRequestEntity = new HttpEntity<>(json, headers);
                         restTemplate.postForObject(affinityUrl, affinityRequestEntity, ApiResponse.class);
                         break;
                     }
-
                 }
             }
         }
@@ -322,8 +321,8 @@ public class DocumentController {
         } else {
             String url = "http://" + affinityName + ":8081/api/deleteDoc/" + dbName + "/" + collectionName + "/" + docId;
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Username", username);
-            headers.set("X-Token", token);
+            headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+            headers.set("X-Token", BOOTSTRAPPING_NODE_USERNAME);
             HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
             restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
         }
@@ -457,8 +456,8 @@ public class DocumentController {
             // Sending the current version of data to the affinity.
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-Old-Value", currentObject.get(propertyName).toString());
-            headers.set("X-Username", username);
-            headers.set("X-Token", token);
+            headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+            headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
             HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
             restTemplate.postForObject(url, requestEntity, String.class);
         }
