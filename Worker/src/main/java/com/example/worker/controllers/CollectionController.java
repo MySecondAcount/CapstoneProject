@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 
 import static com.example.worker.services.FileServices.*;
+import static com.example.worker.services.affinity.AffinityManager.BOOTSTRAPPING_NODE_TOKEN;
+import static com.example.worker.services.affinity.AffinityManager.BOOTSTRAPPING_NODE_USERNAME;
 
 @RestController
 @RequestMapping("/api")
@@ -74,8 +76,8 @@ public class CollectionController {
                 String url = "http://" + worker + ":8081/api/createCol/" + dbName + "/" + collectionName;
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", username);
-                headers.set("X-Token", token);
+                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<Schema> requestEntity = new HttpEntity<>(schema, headers);
                 restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
                 response.setMessage("Collection created successfully.");
@@ -143,8 +145,8 @@ public class CollectionController {
                 String url = "http://" + worker + ":/api/deleteCol/" + dbName.toLowerCase() + "/" + collectionName.toLowerCase();
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", username);
-                headers.set("X-Token", token);
+                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>(headers);
                 restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
             }

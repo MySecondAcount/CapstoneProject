@@ -1,9 +1,12 @@
 package com.example.bankingsystem;
 
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -92,7 +95,6 @@ public class NetworkManager {
                 "    },\n" +
                 "    \"required\": [\n" +
                 "        \"name\",\n" +
-                "        \"dob\",\n" +
                 "        \"phone\",\n" +
                 "        \"address\",\n" +
                 "        \"accountBalance\"\n" +
@@ -111,7 +113,7 @@ public class NetworkManager {
                 "            \"type\": \"string\"\n" +
                 "        },\n" +
                 "        \"transactionAmount\": {\n" +
-                "            \"type\": \"number\"\n" +
+                "            \"type\": \"string\"\n" +
                 "        }\n" +
                 "    },\n" +
                 "    \"required\": [\n" +
@@ -146,4 +148,105 @@ public class NetworkManager {
         HttpEntity<String> requestEntity = new HttpEntity<>(customer.toString(), headers);
         restTemplate.exchange(url, org.springframework.http.HttpMethod.POST, requestEntity, String.class);
     }
+
+    public boolean makeTransaction(String customerID, String amount,
+                                   HttpSession httpSession) {
+        if (!amount.matches("^[+-][0-9]+")) {
+            return false;
+        }
+        int amountInt = Integer.parseInt(amount);
+
+        // fetching the data from the session
+        String workerPort = httpSession.getAttribute("workerPort").toString();
+        String token = httpSession.getAttribute("token").toString();
+        String username = httpSession.getAttribute("username").toString();
+
+        logger.info("workerPort: " + workerPort);
+        logger.info("token: " + token);
+        logger.info("username: " + username);
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/insertOne/bankingSystem/transactions";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", username);
+        headers.set("X-Token", token);
+        headers.set("Content-Type", "application/json");
+
+        JSONObject transaction = new JSONObject();
+        transaction.put("customerID", customerID);
+        transaction.put("transactionAmount", amount);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(transaction.toString(), headers);
+        restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        // TODO: updating the customer with plus or minus effect.
+        url = "http://" + databaseIP + ":" + workerPort + "/api/updateDoc/bankingSystem/customers";
+
+        // getting the json object by the customer id
+
+        return true;
+    }
+
+    public JSONObject getCustomerByID(String id, HttpSession httpSession) {
+        logger.info("Getting customer by id: " + id);
+
+        String workerPort = httpSession.getAttribute("workerPort").toString();
+        String token = httpSession.getAttribute("token").toString();
+        String username = httpSession.getAttribute("username").toString();
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/getDoc/bankingSystem/customers/" + id;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", username);
+        headers.set("X-Token", token);
+        headers.set("Content-Type", "application/json");
+        ResponseEntity<String> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, new HttpEntity<>("", headers), String.class);
+
+        logger.info("response: " + response.getBody());
+        JSONObject responseJSON = new JSONObject(response.getBody());
+        JSONObject customer = new JSONObject(responseJSON.getString("message"));
+
+
+        logger.info("customer: " + customer.toString());
+        return customer;
+    }
+
+    public String allCustomers(HttpSession httpSession) {
+        String workerPort = httpSession.getAttribute("workerPort").toString();
+        String token = httpSession.getAttribute("token").toString();
+        String username = httpSession.getAttribute("username").toString();
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/getAllDocs/bankingSystem/customers";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", username);
+        headers.set("X-Token", token);
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
+        return restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, requestEntity, String.class).getBody();
+    }
+
+
+    public JSONArray getCustomerTransactions(String customerId, HttpSession httpSession) {
+        String workerPort = httpSession.getAttribute("workerPort").toString();
+        String token = httpSession.getAttribute("token").toString();
+        String username = httpSession.getAttribute("username").toString();
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/filter/bankingSystem/transactions" +
+                "attributeName=_id&attributeValue=" + customerId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", username);
+        headers.set("X-Token", token);
+        headers.set("Content-Type", "application/json");
+
+
+        String response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>("", headers), String.class).getBody();
+        logger.info("response: " + response);
+
+        JSONObject responseJSON = new JSONObject(response);
+        JSONArray transactions = new JSONArray(responseJSON.getString("message"));
+        logger.info("transactions: " + transactions.toString());
+        
+        return transactions;
+    }
+
 }

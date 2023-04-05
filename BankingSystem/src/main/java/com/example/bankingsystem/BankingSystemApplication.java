@@ -17,5 +17,4 @@ public class BankingSystemApplication {
         SpringApplication.run(BankingSystemApplication.class, args);
         NetworkManager.getInstance().buildDatabaseSchema();
     }
-
 }

@@ -4,7 +4,7 @@ X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
-# inserting a new collection with schema(fine)
+# inserting a new collection with schema (fine)
 POST http://35.184.131.198:8081/api/createCol/hello/customer11
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
@@ -38,16 +38,14 @@ content-type: application/json
 
 ###
 #inserting a document(fine)
-POST http://35.184.131.198:8081/api/insertOne/hello/customer11
+POST http://35.184.131.198:8081/api/insertOne/bankingsystem/transactions
 X-Token: @321bootstrappingNode123@
 X-Username: bootstrappingNode
 content-type: application/json
 
 {
-  "name": "yazan",
-  "phone": "0792",
-  "address": "Abo Al Ola",
-  "accountBalance": 15.1
+  "customerId": "FromIntellij",
+  "amount": "+1000"
 }
 
 ###
@@ -77,7 +75,7 @@ X-Token: @321bootstrappingNode123@
 
 ###
 # Filtering the data(fine)
-GET http://35.184.131.198:8083/api/filter/Hello2/first?attributeName=name&attributeValue=FromIntellij
+GET http://35.184.131.198:8083/api/filter/bankingsystem/transactions?attributeName=_id&attributeValue=FromIntellij
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
@@ -94,8 +92,8 @@ X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
 ###
-# getting all the documents in a collection(fine)
-GET http://35.184.131.198:8083/api/getAllDocs/bankingsystem/customers
+# getting all the documents in a collection (fine)
+GET http://35.184.131.198:8082/api/getAllDocs/bankingsystem/customers
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 

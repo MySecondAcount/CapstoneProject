@@ -16,6 +16,8 @@ import java.util.List;
 import static com.example.worker.services.FileServices.readFileAsString;
 
 public class AffinityManager {
+    public final static String BOOTSTRAPPING_NODE_USERNAME = "bootstrappingNode";
+    public final static String BOOTSTRAPPING_NODE_TOKEN = "@321bootstrappingNode123@";
     private static AffinityManager instance = null;
     private final String AFFINITY_FILE_PATH = "src/main/java/com/example/worker/services/affinity/document-affinity.json";
     private final Object lock = new Object();

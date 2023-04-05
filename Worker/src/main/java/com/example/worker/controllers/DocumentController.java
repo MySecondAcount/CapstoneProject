@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.Set;
 
 import static com.example.worker.services.FileServices.*;
+import static com.example.worker.services.affinity.AffinityManager.BOOTSTRAPPING_NODE_TOKEN;
+import static com.example.worker.services.affinity.AffinityManager.BOOTSTRAPPING_NODE_USERNAME;
 
 @RestController
 @RequestMapping("/api")
@@ -111,8 +113,8 @@ public class DocumentController {
                 String url = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", username);
-                headers.set("X-Token", token);
+                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
                 restTemplate.postForObject(url, requestEntity, ApiResponse.class);
             }
@@ -304,8 +306,8 @@ public class DocumentController {
                 String url = "http://" + worker + ":8081/api/deleteDoc/" + dbName + "/" + collectionName + "/" + docId;
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", username);
-                headers.set("X-Token", token);
+                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                 restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
             }
@@ -436,8 +438,8 @@ public class DocumentController {
                         collectionName + "/" + docId + "/" + propertyName + "/" + newValue;
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", username);
-                headers.set("X-Token", token);
+                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                 restTemplate.postForObject(url, requestEntity, String.class);
             }

@@ -2,6 +2,7 @@ package com.example.bankingsystem;
 
 
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -113,7 +114,9 @@ public class BankingSystemController {
 
     @PostMapping("storeNewAccountData")
     public String storeNewAccountData(@RequestParam String customerName, @RequestParam String customerPhone,
-                                      @RequestParam String customerAddress, @RequestParam double accountBalance, Model model, HttpSession httpSession) {
+                                      @RequestParam String customerAddress, @RequestParam int accountBalance,
+                                      Model model, HttpSession httpSession) {
+
         logger.info("Received request to store new account data");
         logger.info("Customer name: " + customerName);
         logger.info("Phone: " + customerPhone);
@@ -125,10 +128,81 @@ public class BankingSystemController {
         customer.put("phone", customerPhone);
         customer.put("address", customerAddress);
         customer.put("accountBalance", accountBalance);
+
         logger.info("Customer data JSON: " + customer.toString());
 
         networkManager.addNewCustomer(customer, httpSession);
         return "bank-system";
     }
+
+    @GetMapping("bankingSystem")
+    public String bankingSystem(HttpSession httpSession, Model model) {
+        return "bank-system";
+    }
+
+    @GetMapping("showCustomersAccounts")
+    public String showCustomersAccounts(HttpSession httpSession, Model model) {
+        logger.info("Received request to show all customers accounts");
+        String customers = networkManager.allCustomers(httpSession);
+
+        JSONObject response = new JSONObject(customers);
+        JSONArray customersArray = new JSONArray(response.get("message").toString());
+        logger.info("Customers: " + customersArray.toString());
+
+        model.addAttribute("customers", customersArray);
+        return "show-customers-accounts";
+    }
+
+    @GetMapping("addNewTransaction")
+    public String addNewTransaction(HttpSession httpSession, Model model) {
+        return "add-new-transaction";
+    }
+
+    @PostMapping("storeNewTransaction")
+    public String storeNewTransaction(@RequestParam String customerAccountID, @RequestParam String amount,
+                                      Model model, HttpSession httpSession) {
+        logger.info("Received request to store new transaction");
+        logger.info("Receiver name: " + customerAccountID);
+        logger.info("Amount: " + amount);
+
+        networkManager.makeTransaction(customerAccountID, amount, httpSession);
+        return "bank-system";
+    }
+
+    @GetMapping("getCustomer")
+    public String getCustomer(HttpSession httpSession, Model model) {
+        return "get-customer-id";
+    }
+
+    @PostMapping("showCustomer")
+    public String showCustomer(@RequestParam String customerAccountID, Model model, HttpSession httpSession) {
+
+        logger.info("Received request to show customer with ID: " + customerAccountID);
+
+        JSONObject customer = networkManager.getCustomerByID(customerAccountID, httpSession);
+        logger.info("Customer: " + customer.toString());
+
+        model.addAttribute("customer", customer);
+        return "show-customer";
+    }
+
+    @GetMapping("getCustomer-transactions")
+    public String showCustomerTransactions(Model model, HttpSession httpSession) {
+        return "get-customer-id-transactions-form";
+    }
+
+    @PostMapping("showTransactions")
+    public String showTransactions(@RequestParam String customerAccountID, Model model, HttpSession httpSession) {
+
+        // TODO: debug this endpoint(Request).
+        logger.info("Received request to show transactions for customer with ID: " + customerAccountID);
+
+        JSONArray transactions = networkManager.getCustomerTransactions(customerAccountID, httpSession);
+        logger.info("Transactions: " + transactions.toString());
+
+        model.addAttribute("transactions", transactions);
+        return "show-transactions";
+    }
+
 
 }
