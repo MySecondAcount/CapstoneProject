@@ -79,7 +79,6 @@ public class TokensExpirationManager {
                 jsonArray.remove(i);
             }
         }
-
         try {
             Files.write(Paths.get(tokensFilePath), jsonArray.toString().getBytes());
         } catch (IOException e) {
@@ -90,4 +89,30 @@ public class TokensExpirationManager {
     public String allUsers() {
         return readFileAsString(tokensFile);
     }
+
+    public void removeUser(String token) {
+        String content = readFileAsString(tokensFile);
+        JSONArray jsonArray = new JSONArray(content);
+
+        for (int i = jsonArray.length() - 1; i >= 0; i--) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String currentToken = jsonObject.getString("token");
+            if (currentToken.equals(token)) {
+                String userName = jsonObject.getString("userName");
+                String workerName = jsonObject.getString("workerName");
+                // Sending a request to the worker to remove the registered user.
+                NetworkManager.getInstance().removeExpiredToken(userName, token, workerName);
+                jsonArray.remove(i);
+                break;
+            }
+        }
+
+        // writing the new content to the tokens.json file
+        try {
+            Files.write(Paths.get(tokensFilePath), jsonArray.toString().getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -270,19 +270,21 @@ public class NetworkManager {
         return transactions;
     }
 
-    public void removeCustomer(String id, HttpSession httpSession) {
-        logger.info("Removing customer by id: " + id);
-
-        String workerPort = httpSession.getAttribute("workerPort").toString();
-        String token = httpSession.getAttribute("token").toString();
+    public JSONArray allActiveUsers(HttpSession httpSession) {
         String username = httpSession.getAttribute("username").toString();
+        String token = httpSession.getAttribute("token").toString();
 
-        String url = "http://" + databaseIP + ":" + workerPort + "/api/deleteDoc/bankingSystem/customers/" + id;
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Username", username);
-        headers.set("X-Token", token);
-        headers.set("Content-Type", "application/json");
-        HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
-        restTemplate.exchange(url, org.springframework.http.HttpMethod.DELETE, requestEntity, String.class);
+        String url = "http://" + databaseIP + ":8080/api/getAllUsers";
+        String users = restTemplate.getForObject(url, String.class);
+        logger.info("users: " + users);
+
+        JSONArray usersJSON = new JSONArray(users);
+        logger.info("users: " + usersJSON.toString());
+        return usersJSON;
+    }
+
+    public void removeUser(String token, HttpSession httpSession) {
+        String url = "http://" + databaseIP + ":8080/api/removeUser/" + token;
+        restTemplate.getForObject(url, String.class);
     }
 }

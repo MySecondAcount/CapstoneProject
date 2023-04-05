@@ -45,4 +45,10 @@ public class Controller {
         logger.info("Received request to get all users");
         return TokensExpirationManager.getInstance().allUsers();
     }
+
+    @GetMapping("removeUser/{token}")
+    public void removeUser(@PathVariable("token") String token) {
+        logger.info("Received request to remove user with token " + token);
+        TokensExpirationManager.getInstance().removeUser(token);
+    }
 }

@@ -204,18 +204,24 @@ public class BankingSystemController {
         return "show-transactions";
     }
 
-    @GetMapping("removeCustomer")
-    public String removeCustomer(Model model, HttpSession httpSession) {
-        return "remove-customer-form";
+    @GetMapping("remove-user")
+    public String removeUser(Model model, HttpSession httpSession) {
+        return "remove-user-form";
     }
 
-    @PostMapping("removeCustomer")
-    public String removeCustomer(@RequestParam String customerAccountID, Model model, HttpSession httpSession) {
-        logger.info("Received request to remove customer with ID: " + customerAccountID);
-
-        networkManager.removeCustomer(customerAccountID, httpSession);
-        return "bank-system";
+    @PostMapping("removeUser")
+    public String removeUser(@RequestParam String token, Model model, HttpSession httpSession) {
+        logger.info("Received request to remove user with token: " + token);
+        networkManager.removeUser(token, httpSession);
+        return "admin-system";
     }
 
-
+    @GetMapping("all-users")
+    public String allUsers(Model model, HttpSession httpSession) {
+        logger.info("Received request to show all users");
+        JSONArray users = networkManager.allActiveUsers(httpSession);
+        logger.info("Users: " + users.toString());
+        model.addAttribute("users", users);
+        return "show-all-users";
+    }
 }
