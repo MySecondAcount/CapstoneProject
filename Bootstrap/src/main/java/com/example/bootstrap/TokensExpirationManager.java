@@ -86,4 +86,8 @@ public class TokensExpirationManager {
             throw new RuntimeException(e);
         }
     }
+
+    public String allUsers() {
+        return readFileAsString(tokensFile);
+    }
 }

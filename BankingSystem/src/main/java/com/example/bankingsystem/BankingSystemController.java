@@ -1,6 +1,7 @@
 package com.example.bankingsystem;
 
 
+import com.example.bankingsystem.services.NetworkManager;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -159,13 +160,14 @@ public class BankingSystemController {
     }
 
     @PostMapping("storeNewTransaction")
-    public String storeNewTransaction(@RequestParam String customerAccountID, @RequestParam String amount,
+    public String storeNewTransaction(@RequestParam String customerAccountID, @RequestParam String transactionAmount,
                                       Model model, HttpSession httpSession) {
+
         logger.info("Received request to store new transaction");
         logger.info("Receiver name: " + customerAccountID);
-        logger.info("Amount: " + amount);
+        logger.info("Amount: " + transactionAmount);
 
-        networkManager.makeTransaction(customerAccountID, amount, httpSession);
+        networkManager.makeTransaction(customerAccountID, transactionAmount, httpSession);
         return "bank-system";
     }
 
@@ -193,8 +195,6 @@ public class BankingSystemController {
 
     @PostMapping("showTransactions")
     public String showTransactions(@RequestParam String customerAccountID, Model model, HttpSession httpSession) {
-
-        // TODO: debug this endpoint(Request).
         logger.info("Received request to show transactions for customer with ID: " + customerAccountID);
 
         JSONArray transactions = networkManager.getCustomerTransactions(customerAccountID, httpSession);
@@ -202,6 +202,19 @@ public class BankingSystemController {
 
         model.addAttribute("transactions", transactions);
         return "show-transactions";
+    }
+
+    @GetMapping("removeCustomer")
+    public String removeCustomer(Model model, HttpSession httpSession) {
+        return "remove-customer-form";
+    }
+
+    @PostMapping("removeCustomer")
+    public String removeCustomer(@RequestParam String customerAccountID, Model model, HttpSession httpSession) {
+        logger.info("Received request to remove customer with ID: " + customerAccountID);
+
+        networkManager.removeCustomer(customerAccountID, httpSession);
+        return "bank-system";
     }
 
 

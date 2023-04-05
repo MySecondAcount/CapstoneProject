@@ -301,24 +301,21 @@ public class DocumentController {
         if (affinityName == null) {
             return new ApiResponse("Document with ID " + docId + " not found in collection " + collectionName + ".", 404);
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
+        headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
 
         // the document is owned by the current worker
         if (affinityName.equals(affinityManager.getCurrentWorkerName())) {
             logger.info("propagating delete request to all workers");
             for (String worker : affinityManager.getWorkers()) {
                 String url = "http://" + worker + ":8081/api/deleteDoc/" + dbName + "/" + collectionName + "/" + docId;
-                HttpHeaders headers = new HttpHeaders();
                 headers.set("X-Propagated-Request", "true");
-                headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
-                headers.set("X-Token", BOOTSTRAPPING_NODE_TOKEN);
                 HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                 restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
             }
         } else {
             String url = "http://" + affinityName + ":8081/api/deleteDoc/" + dbName + "/" + collectionName + "/" + docId;
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Username", BOOTSTRAPPING_NODE_USERNAME);
-            headers.set("X-Token", BOOTSTRAPPING_NODE_USERNAME);
             HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
             restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
         }

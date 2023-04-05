@@ -39,4 +39,10 @@ public class Controller {
         logger.info("User " + username + " registered with token " + token);
         return userCredentialsJSON.toString();
     }
+
+    @GetMapping("getAllUsers")
+    public String getAllUsers() {
+        logger.info("Received request to get all users");
+        return TokensExpirationManager.getInstance().allUsers();
+    }
 }

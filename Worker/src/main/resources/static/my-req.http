@@ -51,7 +51,7 @@ content-type: application/json
 
 ###
 # getting all the documents in a collection (fine)
-GET http://35.184.131.198:8083/api/getAllDocs/bankingsystem/customers
+GET http://35.184.131.198:8083/api/getAllDocs/bankingsystem/transactions
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
@@ -94,7 +94,8 @@ X-Token: @321bootstrappingNode123@
 
 ###
 # Filtering the data(fine)
-GET http://35.184.131.198:8083/api/filter/bankingsystem/transactions?attributeName=_id&attributeValue=FromIntellij
+GET http://35.184.131.198:8083/api/filter/bankingsystem/transactions?attributeName=customerID&
+    attributeValue=6b2eb755-8b9e-46dc-9ba4-c4ae0549cd2e
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 

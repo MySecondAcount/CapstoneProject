@@ -1,4 +1,4 @@
-package com.example.bankingsystem;
+package com.example.bankingsystem.services;
 
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
@@ -151,6 +151,8 @@ public class NetworkManager {
 
     public boolean makeTransaction(String customerID, String amount,
                                    HttpSession httpSession) {
+
+        // checking if the amount is a valid number
         if (!amount.matches("^[+-][0-9]+")) {
             return false;
         }
@@ -178,10 +180,17 @@ public class NetworkManager {
         HttpEntity<String> requestEntity = new HttpEntity<>(transaction.toString(), headers);
         restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-        // TODO: updating the customer with plus or minus effect.
-        url = "http://" + databaseIP + ":" + workerPort + "/api/updateDoc/bankingSystem/customers";
 
-        // getting the json object by the customer id
+        // getting the old customer object
+        JSONObject customer = getCustomerByID(customerID, httpSession);
+        int oldBalance = customer.getInt("accountBalance");
+        int newBalance = oldBalance + amountInt;
+
+        url = "http://" + databaseIP + ":" + workerPort + "/api/updateDoc/bankingSystem/customers/" + customerID
+                + "/accountBalance/" + newBalance;
+
+        HttpEntity<String> requestEntity2 = new HttpEntity<>("", headers);
+        restTemplate.exchange(url, HttpMethod.POST, requestEntity2, String.class);
 
         return true;
     }
@@ -218,7 +227,7 @@ public class NetworkManager {
         logger.info("workerPort: " + workerPort);
         logger.info("token: " + token);
         logger.info("username: " + username);
-        
+
         String url = "http://" + databaseIP + ":" + workerPort + "/api/getAllDocs/bankingSystem/customers";
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Username", username);
@@ -231,12 +240,19 @@ public class NetworkManager {
 
 
     public JSONArray getCustomerTransactions(String customerId, HttpSession httpSession) {
+
+
         String workerPort = httpSession.getAttribute("workerPort").toString();
         String token = httpSession.getAttribute("token").toString();
         String username = httpSession.getAttribute("username").toString();
 
-        String url = "http://" + databaseIP + ":" + workerPort + "/api/filter/bankingSystem/transactions" +
-                "attributeName=_id&attributeValue=" + customerId;
+        logger.info("workerPort: " + workerPort);
+        logger.info("token: " + token);
+        logger.info("username: " + username);
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/filter/bankingSystem/transactions?" +
+                "attributeName=customerID&attributeValue=" + customerId;
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Username", username);
@@ -254,4 +270,19 @@ public class NetworkManager {
         return transactions;
     }
 
+    public void removeCustomer(String id, HttpSession httpSession) {
+        logger.info("Removing customer by id: " + id);
+
+        String workerPort = httpSession.getAttribute("workerPort").toString();
+        String token = httpSession.getAttribute("token").toString();
+        String username = httpSession.getAttribute("username").toString();
+
+        String url = "http://" + databaseIP + ":" + workerPort + "/api/deleteDoc/bankingSystem/customers/" + id;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Username", username);
+        headers.set("X-Token", token);
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
+        restTemplate.exchange(url, org.springframework.http.HttpMethod.DELETE, requestEntity, String.class);
+    }
 }
