@@ -35,22 +35,41 @@ content-type: application/json
   "additionalProperties": false
 }
 
+###
+#inserting a document(fine)
+POST http://35.184.131.198:8081/api/insertOne/bankingsystem/customers
+X-Username: a
+X-Token: a4791dd7-908c-40eb-9a7a-1ad6054c7842
+content-type: application/json
+
+{
+  "name": "FromIntellij",
+  "phone": "123456789",
+  "address": "1234",
+  "accountBalance": 1000
+}
+
+###
+# getting all the documents in a collection (fine)
+GET http://35.184.131.198:8081/api/getAllDocs/bankingsystem/customers
+X-Username: bootstrappingNode
+X-Token: @321bootstrappingNode123@
 
 ###
 #inserting a document(fine)
-POST http://35.184.131.198:8081/api/insertOne/bankingsystem/transactions
+POST http://35.184.131.198:8082/api/insertOne/bankingsystem/transactions
 X-Token: @321bootstrappingNode123@
 X-Username: bootstrappingNode
 content-type: application/json
 
 {
-  "customerId": "FromIntellij",
-  "amount": "+1000"
+  "customerID": "FromIntellij",
+  "transactionAmount": "+1000"
 }
 
 ###
 # checking if 8081 is affinity (fine)
-GET http://35.184.131.198:8083/api/isAffinity
+GET http://35.184.131.198:8082/api/isAffinity
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
@@ -91,11 +110,7 @@ GET http://35.184.131.198:8081/api/getCollections/bankingsystem
 X-Username: bootstrappingNode
 X-Token: @321bootstrappingNode123@
 
-###
-# getting all the documents in a collection (fine)
-GET http://35.184.131.198:8082/api/getAllDocs/bankingsystem/customers
-X-Username: bootstrappingNode
-X-Token: @321bootstrappingNode123@
+
 
 ###
 # getting doc by id(fine)

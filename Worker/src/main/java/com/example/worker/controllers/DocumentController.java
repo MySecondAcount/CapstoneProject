@@ -72,7 +72,8 @@ public class DocumentController {
             @RequestHeader(value = "X-Username") String username,
             @RequestHeader(value = "X-Token") String token
     ) {
-
+        logger.info("trying to add the document" + json);
+        
         dbName = dbName.toLowerCase();
         collectionName = collectionName.toLowerCase();
         logger.info("Inserting document into database: {}, collection: {}" + (propagatedRequest ? " (propagated)" : ""), dbName, collectionName);
@@ -87,6 +88,7 @@ public class DocumentController {
         File schemaFile = new File(DATABASES_DIRECTORY + dbName + SCHEMAS_DIRECTORY + collectionName + ".json");
 
         if (propagatedRequest) { // - Just take the new copy of the data. (no need to propagate it again)
+            logger.info("Propagated request to add the document:" + json);
             dao.addDocument(collectionFile, json);
             propertyIndexManager.indexingNewObject(dbName, collectionName, new JSONObject(json));
             logger.info("Document inserted successfully");
@@ -104,9 +106,9 @@ public class DocumentController {
             logger.warn("Invalid JSON object: {}", json);
             return new ApiResponse("Invalid JSON object.", 400);
         }
+
         // the current worker is the affinity worker
         if (affinityManager.isCurrentWorkerAffinity()) {
-
             json = addIdToDocument(json);
             // propagating the new document to all workers
             for (String worker : affinityManager.getWorkers()) {
@@ -128,6 +130,7 @@ public class DocumentController {
             // Passing the affinity worker to the next worker
             passTheAffinityToNextWorker();
         } else {
+            logger.info("The current worker: " + affinityManager.getCurrentWorkerName() + " is not the affinity worker");
             // The current worker is not the affinity worker
             // search for the affinity worker.
             for (String worker : affinityManager.getWorkers()) {
@@ -138,7 +141,11 @@ public class DocumentController {
                     headers.set("X-Token", "@321bootstrappingNode123@");
                     HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
                     ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Boolean.class);
+
                     if (responseEntity.getBody()) {
+                        logger.info("The current worker: " + affinityManager.getCurrentWorkerName() + " is not the " +
+                                "affinity, The affinity worker is: {}", worker);
+
                         String affinityUrl = "http://" + worker + ":8081/api/insertOne/" + dbName + "/" + collectionName;
                         headers.set("X-Username", username);
                         headers.set("X-Token", token);
@@ -146,6 +153,7 @@ public class DocumentController {
                         restTemplate.postForObject(affinityUrl, affinityRequestEntity, ApiResponse.class);
                         break;
                     }
+
                 }
             }
         }

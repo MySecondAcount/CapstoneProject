@@ -214,6 +214,11 @@ public class NetworkManager {
         String token = httpSession.getAttribute("token").toString();
         String username = httpSession.getAttribute("username").toString();
 
+
+        logger.info("workerPort: " + workerPort);
+        logger.info("token: " + token);
+        logger.info("username: " + username);
+        
         String url = "http://" + databaseIP + ":" + workerPort + "/api/getAllDocs/bankingSystem/customers";
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Username", username);
@@ -245,7 +250,7 @@ public class NetworkManager {
         JSONObject responseJSON = new JSONObject(response);
         JSONArray transactions = new JSONArray(responseJSON.getString("message"));
         logger.info("transactions: " + transactions.toString());
-        
+
         return transactions;
     }
 
